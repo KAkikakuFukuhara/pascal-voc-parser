@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "pascal-voc-parser"
+version = "0.1.0"
+description = "PascalVOC Dataset parser"
+authors = ["Kenta Fukuhara <105337464+KAkikakuFukuhara@users.noreply.github.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = ">=3.7, <=3.9"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

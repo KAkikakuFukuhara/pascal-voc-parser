@@ -1,0 +1,11 @@
+# files
+.python-version
+*.json
+*.xml
+poetry.lock
+
+# dirs
+__pycache__
+.venv
+
+# exception
