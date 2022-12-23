@@ -1,0 +1,2 @@
+colorama==0.4.6; python_version >= "2.7" and python_full_version < "3.0.0" and platform_system == "Windows" or python_full_version >= "3.7.0" and platform_system == "Windows"
+tqdm==4.64.1; (python_version >= "2.7" and python_full_version < "3.0.0") or (python_full_version >= "3.4.0")
