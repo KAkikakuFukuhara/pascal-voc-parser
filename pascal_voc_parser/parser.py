@@ -1,4 +1,4 @@
-from typing import Optional, List, Dict
+from typing import Optional, List, Dict, Union
 from pathlib import Path
 import glob
 import xml.etree.ElementTree as et
@@ -48,26 +48,62 @@ class ParsedPascalVOC:
         self.bboxes:List[Bbox]
 
 
-    def parse_file(self, xml_path:Path) -> None:
-        self.xml_file = xml_path
+    def parse_file(self, xml_path:Union[str, Path]) -> None:
+        _xml_path = Path(xml_path)
+        self.xml_file = _xml_path
 
-        with self.xml_file.open("r") as f:
-            tree = et.parse(f)
-        root = tree.getroot()
+        tree:et.ElementTree = _load_xml_as_elemtree(self.xml_file)
+        root:et.Element = tree.getroot()
 
         self.img_name = Path(_parse_filename(root))
         self.name2size= _parse_imgsize(root)
         self.bboxes = _parse_bboxes(root)
 
 
-def _parse_filename(root:et.ElementTree) -> Optional[str]:
+    def save_new_xml(self, path:str):
+        _path = Path(path)
+        assert _path.suffix == ".xml"
+
+        is_equal_name = self.xml_file.name == _path.name
+        if not is_equal_name:
+            self.img_name = Path(f"{_path.stem}{self.img_name.suffix}")
+
+        tree:et.ElementTree = _load_xml_as_elemtree(self.xml_file)
+        root:et.Element = tree.getroot()
+
+        # write new value
+        root.find("filename").text = str(self.img_name)
+        root.find("size").find("height").text = str(self.name2size['hsize'])
+        root.find("size").find("width").text = str(self.name2size['wsize'])
+        root.find("size").find("depth").text = str(self.name2size['csize'])
+        for i, obj in enumerate(root.iter("object")):
+            obj.find("name").text = str(self.bboxes[i].name)
+            obj.find("difficult").text = str(self.bboxes[i].difficult)
+            xmlbox = obj.find("bndbox")
+            xmlbox.find("xmin").text = str(int(self.bboxes[i].x1))
+            xmlbox.find("ymin").text = str(int(self.bboxes[i].y1))
+            xmlbox.find("xmax").text = str(int(self.bboxes[i].x2))
+            xmlbox.find("ymax").text = str(int(self.bboxes[i].y2))
+
+        tree.write(str(_path))
+
+
+def _load_xml_as_elemtree(path:str) -> et.ElementTree:
+    _path = Path(path)
+
+    with _path.open("r") as f:
+        tree = et.parse(f)
+    return tree
+
+
+def _parse_filename(root:et.Element) -> Optional[str]:
     """ get filename from element tree
     """
     element = root.find("filename")
     return element.text if element is not None else None
 
 
-def _parse_imgsize(root:et.ElementTree) -> Optional[Dict[str, int]]:
+def _parse_imgsize(root:et.Element) -> Optional[Dict[str, int]]:
     node = root.find('size')
     if node is None:
         return None
@@ -77,7 +113,7 @@ def _parse_imgsize(root:et.ElementTree) -> Optional[Dict[str, int]]:
     return {'hsize':hsize, 'wsize':wsize, 'csize':csize}
 
 
-def _parse_bboxes(root:et.ElementTree) -> List[Bbox]:
+def _parse_bboxes(root:et.Element) -> List[Bbox]:
     """ get bboxes from result that parse xml
     """
     bboxes :List[Bbox]= []
@@ -97,7 +133,7 @@ def _parse_bboxes(root:et.ElementTree) -> List[Bbox]:
     return bboxes
 
 
-def load_datasets(xml_dir:Path) -> List[ParsedPascalVOC]:
+def load_datasets(xml_dir:Union[str, Path]) -> List[ParsedPascalVOC]:
     _xml_dir = Path(xml_dir)
     xml_files = [Path(p) for p in glob.glob(f"{_xml_dir}/*.xml")]
     assert len(xml_files) > 0
