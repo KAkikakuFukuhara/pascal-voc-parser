@@ -3,7 +3,7 @@
 ![](https://img.shields.io/badge/python-3.7|3.8|3.9-blue.svg)
 
 
-## obtainable tag
+## obtainable and editable tag
 
 |    tag    | valid |
 | --------- | ----- |
@@ -15,7 +15,7 @@
 | segmented |       |
 | object    | x     |
 
-- object
+- in (object) tag
 
 |    tag    | valid |
 | --------- | ----- |
@@ -41,10 +41,10 @@ pip install git+ssh://git@github.com:KAkikakuFukuhara/pascal-voc-parser.git
 ## usage
 
 ```python
-from pascal_voc_parser import parser as pvparser
+from pascal_voc_parser import parser as voc_parser
 
 xml_dir = "Hoge"
-datasets = pvparser.load_datasets(xml_dir)
+datasets = voc_parser.load_datasets(xml_dir)
 ```
 
 - example

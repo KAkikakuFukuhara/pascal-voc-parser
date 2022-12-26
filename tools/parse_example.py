@@ -3,7 +3,7 @@ from argparse import ArgumentParser
 from pathlib import Path
 
 import _add_path
-from pascal_voc_parser import parser
+from pascal_voc_parser import parser as voc_parser
 from pascal_voc_parser.parser import ParsedPascalVOC
 
 if __name__ == "__main__":
@@ -17,7 +17,7 @@ if __name__ == "__main__":
     xml_dir = Path(args['xml_dir']).absolute()
     assert xml_dir.exists()
 
-    datasets:List[ParsedPascalVOC] = parser.load_datasets(xml_dir)
+    datasets:List[ParsedPascalVOC] = voc_parser.load_datasets(xml_dir)
     dataset = datasets[0]
 
     # show xml_file path

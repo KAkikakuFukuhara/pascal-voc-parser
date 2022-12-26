@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pascal-voc-parser"
-version = "0.1.0"
+version = "0.2.0"
 description = "PascalVOC Dataset parser"
 authors = ["Kenta Fukuhara <105337464+KAkikakuFukuhara@users.noreply.github.com>"]
 license = "MIT"
