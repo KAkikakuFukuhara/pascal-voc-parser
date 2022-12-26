@@ -8,5 +8,6 @@ poetry.lock
 __pycache__
 .venv
 data/*
+new_xmls
 
 # exception
