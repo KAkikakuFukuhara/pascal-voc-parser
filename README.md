@@ -3,7 +3,7 @@
 ![](https://img.shields.io/badge/python-3.7|3.8|3.9-blue.svg)
 
 
-## tag status
+## obtainable tag
 
 |    tag    | valid |
 | --------- | ----- |
