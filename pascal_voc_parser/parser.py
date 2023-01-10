@@ -62,7 +62,9 @@ class ParsedPascalVOC:
 
     def save_new_xml(self, path:str):
         _path = Path(path)
-        assert _path.suffix == ".xml"
+
+        assert _path.suffix == ".xml", "[Error] New file name suffix only '.xml'"
+        assert _path != self.xml_file , "[Error] Writing to the same file is prohibited"
 
         is_equal_name = self.xml_file.name == _path.name
         if not is_equal_name:
