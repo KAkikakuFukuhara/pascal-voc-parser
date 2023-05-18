@@ -35,7 +35,7 @@
 ## install
 
 ```bash
-pip install git+ssh://git@github.com:KAkikakuFukuhara/pascal-voc-parser.git
+pip install git+ssh://git@github.com/KAkikakuFukuhara/pascal-voc-parser.git
 ```
 
 ## usage
