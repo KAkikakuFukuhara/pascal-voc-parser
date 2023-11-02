@@ -44,7 +44,7 @@ class ParsedPascalVOC:
     def __init__(self):
         self.xml_file:Path
         self.img_name:Path
-        self.name2size:Dict[int]
+        self.name2size:Dict[str, int]
         self.bboxes:List[Bbox]
 
 
@@ -74,23 +74,23 @@ class ParsedPascalVOC:
         root:et.Element = tree.getroot()
 
         # write new value
-        root.find("filename").text = str(self.img_name)
-        root.find("size").find("height").text = str(self.name2size['hsize'])
-        root.find("size").find("width").text = str(self.name2size['wsize'])
-        root.find("size").find("depth").text = str(self.name2size['csize'])
+        root.find("filename").text = str(self.img_name) # type:ignore
+        root.find("size").find("height").text = str(self.name2size['hsize']) # type:ignore
+        root.find("size").find("width").text = str(self.name2size['wsize']) # type:ignore
+        root.find("size").find("depth").text = str(self.name2size['csize']) # type:ignore
         for i, obj in enumerate(root.iter("object")):
-            obj.find("name").text = str(self.bboxes[i].name)
-            obj.find("difficult").text = str(self.bboxes[i].difficult)
+            obj.find("name").text = str(self.bboxes[i].name) # type:ignore
+            obj.find("difficult").text = str(self.bboxes[i].difficult) # type:ignore
             xmlbox = obj.find("bndbox")
-            xmlbox.find("xmin").text = str(int(self.bboxes[i].x1))
-            xmlbox.find("ymin").text = str(int(self.bboxes[i].y1))
-            xmlbox.find("xmax").text = str(int(self.bboxes[i].x2))
-            xmlbox.find("ymax").text = str(int(self.bboxes[i].y2))
+            xmlbox.find("xmin").text = str(int(self.bboxes[i].x1)) # type:ignore
+            xmlbox.find("ymin").text = str(int(self.bboxes[i].y1)) # type:ignore
+            xmlbox.find("xmax").text = str(int(self.bboxes[i].x2)) # type:ignore
+            xmlbox.find("ymax").text = str(int(self.bboxes[i].y2)) # type:ignore
 
         tree.write(str(_path))
 
 
-def _load_xml_as_elemtree(path:str) -> et.ElementTree:
+def _load_xml_as_elemtree(path:Path) -> et.ElementTree:
     _path = Path(path)
 
     with _path.open("r") as f:
@@ -98,20 +98,20 @@ def _load_xml_as_elemtree(path:str) -> et.ElementTree:
     return tree
 
 
-def _parse_filename(root:et.Element) -> Optional[str]:
+def _parse_filename(root:et.Element) -> str:
     """ get filename from element tree
     """
     element = root.find("filename")
-    return element.text if element is not None else None
+    return str(element.text) if element is not None else ""
 
 
-def _parse_imgsize(root:et.Element) -> Optional[Dict[str, int]]:
+def _parse_imgsize(root:et.Element) -> Dict[str, int]:
     node = root.find('size')
     if node is None:
-        return None
-    hsize = int(node.find('height').text)
-    wsize = int(node.find('width').text)
-    csize = int(node.find('depth').text)
+        return {}
+    hsize = int(node.find('height').text) # type:ignore
+    wsize = int(node.find('width').text) # type:ignore
+    csize = int(node.find('depth').text) # type:ignore
     return {'hsize':hsize, 'wsize':wsize, 'csize':csize}
 
 
@@ -123,12 +123,12 @@ def _parse_bboxes(root:et.Element) -> List[Bbox]:
     for obj in root.iter("object"):
         xmlbox = obj.find("bndbox")
         bbox = Bbox()
-        bbox.name = obj.find("name").text
-        bbox.difficult = obj.find("difficult").text
-        bbox.x1 = float(xmlbox.find("xmin").text)
-        bbox.y1 = float(xmlbox.find("ymin").text)
-        bbox.x2 = float(xmlbox.find("xmax").text)
-        bbox.y2 = float(xmlbox.find("ymax").text)
+        bbox.name = obj.find("name").text # type:ignore
+        bbox.difficult = obj.find("difficult").text # type:ignore
+        bbox.x1 = float(xmlbox.find("xmin").text) # type:ignore
+        bbox.y1 = float(xmlbox.find("ymin").text) # type:ignore
+        bbox.x2 = float(xmlbox.find("xmax").text) # type:ignore
+        bbox.y2 = float(xmlbox.find("ymax").text) # type:ignore
 
         bboxes.append(bbox)
 
